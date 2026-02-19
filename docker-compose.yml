@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: ged-postgres
+    environment:
+      POSTGRES_DB: ged
+      POSTGRES_USER: ged_user
+      POSTGRES_PASSWORD: ged_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ged-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ged_user -d ged"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ged-backend
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/ged
+      DATABASE_USERNAME: ged_user
+      DATABASE_PASSWORD: ged_pass
+      JWT_SECRET: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      UPLOAD_DIR: /app/uploads
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ged-network
+
+volumes:
+  postgres_data:
+  uploads:
+
+networks:
+  ged-network:
+    driver: bridge
