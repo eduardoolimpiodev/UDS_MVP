@@ -27,12 +27,20 @@ Sistema completo de gestão de documentos com upload, versionamento, busca e con
 - **JUnit 5 + Mockito** - Testes unitários
 - **Maven** - Gerenciamento de dependências
 
+### Frontend
+- **Angular 17** - Framework frontend
+- **Angular Material** - Componentes UI
+- **RxJS** - Programação reativa
+- **TypeScript** - Type safety
+- **SCSS** - Estilização
+
 ### DevOps
 - **Docker** - Containerização
 - **Docker Compose** - Orquestração de containers
 - **GitHub Actions** - CI/CD
+- **Nginx** - Servidor web para frontend
 
-## 🏗️ Arquitetura
+## Arquitetura
 
 O projeto segue os princípios de **Clean Architecture** com separação clara de responsabilidades:
 
@@ -120,7 +128,7 @@ cd backend
 mvn spring-boot:run
 ```
 
-## 🔐 Autenticação
+## Autenticação
 
 O sistema possui dois usuários pré-cadastrados:
 
@@ -276,6 +284,18 @@ UDS_MVP/
 │   │   └── test/
 │   ├── Dockerfile
 │   └── pom.xml
+├── frontend/
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── core/
+│   │   │   ├── features/
+│   │   │   └── shared/
+│   │   ├── environments/
+│   │   └── styles.scss
+│   ├── Dockerfile
+│   ├── nginx.conf
+│   ├── package.json
+│   └── angular.json
 ├── docker-compose.yml
 ├── .github/
 │   └── workflows/
@@ -328,20 +348,21 @@ O projeto possui pipeline GitHub Actions que:
 
 ## 🚧 Limitações Conhecidas
 
-1. **Frontend não implementado**: Apenas backend API REST
-2. **Storage local**: Produção deveria usar S3/MinIO
-3. **Sem paginação em versões**: Lista todas as versões
-4. **Sem soft delete**: DELETE é permanente (exceto ARCHIVED)
+1. **Storage local**: Produção deveria usar S3/MinIO
+2. **Sem paginação em versões**: Lista todas as versões
+3. **Sem soft delete**: DELETE é permanente (exceto ARCHIVED)
+4. **Sem criação de documentos no frontend**: Apenas visualização e upload de versões
 
 ## 📝 Próximos Passos
 
-- [ ] Implementar frontend Angular
-- [ ] Adicionar testes de integração
+- [ ] Adicionar testes de integração (backend)
+- [ ] Adicionar testes unitários (frontend)
 - [ ] Migrar storage para S3/MinIO
 - [ ] Implementar soft delete
 - [ ] Adicionar logs estruturados
 - [ ] Implementar rate limiting
 - [ ] Adicionar métricas (Prometheus)
+- [ ] Implementar busca avançada com Elasticsearch
 
 ## 👤 Autor
 
