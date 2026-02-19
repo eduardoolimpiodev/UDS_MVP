@@ -1,0 +1,40 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-card-title>Sistema de Gestão de Documentos</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field class="full-width">
+          <mat-label>Usuário</mat-label>
+          <input matInput formControlName="username" autocomplete="username">
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Senha</mat-label>
+          <input matInput type="password" formControlName="password" autocomplete="current-password">
+        </mat-form-field>
+
+        @if (errorMessage) {
+          <div class="error-message">{{ errorMessage }}</div>
+        }
+
+        <button mat-raised-button color="primary" type="submit" 
+                [disabled]="!loginForm.valid || loading" class="full-width">
+          @if (loading) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            Entrar
+          }
+        </button>
+      </form>
+
+      <div class="demo-credentials">
+        <p><strong>Credenciais de teste:</strong></p>
+        <p>Admin: admin / admin</p>
+        <p>User: user / user</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

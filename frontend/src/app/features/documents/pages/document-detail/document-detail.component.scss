@@ -1,0 +1,37 @@
+.document-card, .versions-card {
+  margin-bottom: 24px;
+}
+
+.metadata {
+  p {
+    margin: 12px 0;
+  }
+}
+
+.tags {
+  margin-top: 16px;
+  
+  mat-chip {
+    margin: 4px;
+  }
+}
+
+.upload-section {
+  margin-bottom: 24px;
+}
+
+.no-versions {
+  text-align: center;
+  color: #666;
+  padding: 24px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}
+
+table {
+  margin-top: 16px;
+}

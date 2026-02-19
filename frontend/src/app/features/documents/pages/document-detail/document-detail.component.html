@@ -1,0 +1,111 @@
+<div class="container">
+  <button mat-button (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+    Voltar
+  </button>
+
+  @if (document) {
+    <mat-card class="document-card">
+      <mat-card-header>
+        <mat-card-title>{{ document.title }}</mat-card-title>
+        <mat-card-subtitle>
+          <mat-chip [color]="document.status === 'PUBLISHED' ? 'primary' : 'accent'">
+            {{ document.status }}
+          </mat-chip>
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="metadata">
+          <p><strong>Descrição:</strong> {{ document.description || 'Sem descrição' }}</p>
+          <p><strong>Proprietário:</strong> {{ document.ownerUsername }}</p>
+          <p><strong>Criado em:</strong> {{ document.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+          <p><strong>Atualizado em:</strong> {{ document.updatedAt | date:'dd/MM/yyyy HH:mm' }}</p>
+          
+          @if (document.tags && document.tags.length > 0) {
+            <div class="tags">
+              <strong>Tags:</strong>
+              @for (tag of document.tags; track tag) {
+                <mat-chip>{{ tag }}</mat-chip>
+              }
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="versions-card">
+      <mat-card-header>
+        <mat-card-title>Versões do Documento</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="upload-section">
+          <input type="file" #fileInput (change)="onFileSelected($event)" 
+                 accept=".pdf,.png,.jpg,.jpeg" style="display: none">
+          <button mat-raised-button color="primary" (click)="fileInput.click()" 
+                  [disabled]="uploading">
+            <mat-icon>upload</mat-icon>
+            @if (uploading) {
+              Enviando...
+            } @else {
+              Nova Versão
+            }
+          </button>
+        </div>
+
+        @if (versions.length > 0) {
+          <table mat-table [dataSource]="versions" class="full-width">
+            <ng-container matColumnDef="versionNumber">
+              <th mat-header-cell *matHeaderCellDef>Versão</th>
+              <td mat-cell *matCellDef="let version">
+                v{{ version.versionNumber }}
+                @if (version.isCurrent) {
+                  <mat-chip color="primary">Atual</mat-chip>
+                }
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fileName">
+              <th mat-header-cell *matHeaderCellDef>Arquivo</th>
+              <td mat-cell *matCellDef="let version">{{ version.fileName }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="fileSize">
+              <th mat-header-cell *matHeaderCellDef>Tamanho</th>
+              <td mat-cell *matCellDef="let version">{{ formatFileSize(version.fileSize) }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="uploadedAt">
+              <th mat-header-cell *matHeaderCellDef>Upload em</th>
+              <td mat-cell *matCellDef="let version">{{ version.uploadedAt | date:'dd/MM/yyyy HH:mm' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="uploadedBy">
+              <th mat-header-cell *matHeaderCellDef>Por</th>
+              <td mat-cell *matCellDef="let version">{{ version.uploadedBy }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Ações</th>
+              <td mat-cell *matCellDef="let version">
+                <button mat-icon-button (click)="downloadVersion(version.id, version.fileName)">
+                  <mat-icon>download</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        } @else {
+          <p class="no-versions">Nenhuma versão disponível. Faça o upload do primeiro arquivo.</p>
+        }
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <div class="loading">
+      <mat-spinner></mat-spinner>
+    </div>
+  }
+</div>
