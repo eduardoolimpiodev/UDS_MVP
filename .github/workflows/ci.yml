@@ -11,6 +11,21 @@ jobs:
     name: Backend Build and Test
     runs-on: ubuntu-latest
     
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: ged
+          POSTGRES_USER: ged_user
+          POSTGRES_PASSWORD: ged_pass
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -28,6 +43,10 @@ jobs:
 
       - name: Run tests
         working-directory: ./backend
+        env:
+          DATABASE_URL: jdbc:postgresql://localhost:5432/ged
+          DATABASE_USERNAME: ged_user
+          DATABASE_PASSWORD: ged_pass
         run: mvn test
 
       - name: Package application
